@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="violet">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NoDebiti.it – Wizard (interattivo + temi)</title>
+  <style>
+    /* ================= THEME TOKENS ================= */
+    :root{
+      --bg1:#0f172a; --bg2:#1f2937; --brand:#1a2c54; --brand-2:#2b4b8a; --accent:#22c55e;
+      --text:#e5e7eb; --muted:#9ca3af; --danger:#ef4444; --ring: rgba(34,197,94,.35);
+      --card: rgba(255,255,255,.04);
+      --glow: rgba(34,197,94,.3);
+    }
+    html[data-theme="violet"]{
+      --bg1:#160b26; --bg2:#2a164b;
+      --brand:#6d28d9; --brand-2:#a21caf; --accent:#f59e0b;
+      --text:#f5f3ff; --muted:#c4b5fd; --danger:#ef4444;
+      --card: rgba(255,255,255,.06);
+      --ring: rgba(245,158,11,.35);
+      --glow: rgba(162,28,175,.35);
+    }
+    html[data-theme="teal"]{
+      --bg1:#062a2b; --bg2:#0b3b4e;
+      --brand:#0ea5a5; --brand-2:#0284c7; --accent:#38bdf8;
+      --text:#e6fffb; --muted:#99f6e4; --danger:#ef4444;
+      --card: rgba(255,255,255,.07);
+      --ring: rgba(56,189,248,.35);
+      --glow: rgba(14,165,165,.35);
+    }
+    html[data-theme="emerald"]{
+      --bg1:#0f172a; --bg2:#12211a;
+      --brand:#1a2c54; --brand-2:#2563eb; --accent:#22c55e;
+      --text:#e5f9f0; --muted:#a7f3d0; --danger:#ef4444;
+      --card: rgba(255,255,255,.06);
+      --ring: rgba(34,197,94,.35);
+      --glow: rgba(34,197,94,.3);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(255,255,255,.07), transparent 60%),
+        radial-gradient(1000px 600px at 110% 10%, var(--glow), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:grid; place-items:center; padding:24px;
+      overflow-x:hidden;
+    }
+    .container{
+      width:100%; max-width:920px;
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:24px; padding:28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 0 4px transparent;
+      backdrop-filter: blur(6px);
+      transition: box-shadow .25s ease;
+    }
+    .container:focus-within{ box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 0 6px var(--ring); }
+
+    .header{ display:flex; gap:16px; align-items:center; margin-bottom:12px; justify-content:space-between; }
+    .brand{ display:flex; gap:14px; align-items:center; }
+    .logo{
+      width:48px; height:48px; border-radius:12px; display:grid; place-items:center;
+      background: radial-gradient(120% 120% at 35% 25%, var(--brand-2), var(--brand));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 8px 22px rgba(0,0,0,.45);
+      font-weight:800; letter-spacing:.4px;
+    }
+    h1{font-size:clamp(22px, 2.4vw, 30px); margin:0}
+    p.lead{margin:6px 0 8px 0; color:var(--muted)}
+
+    .theme{ display:flex; align-items:center; gap:10px; }
+    .chip{
+      border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06);
+      padding:8px 10px; border-radius:999px; cursor:pointer; font-size:13px;
+      transition: transform .15s ease, border-color .2s ease, background .2s ease;
+    }
+    .chip.active{ border-color: var(--accent); transform: translateY(-1px); background: rgba(255,255,255,.12); }
+
+    .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0 10px 0;}
+    .step{display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.15); color:var(--muted); background:rgba(255,255,255,.04); transition: all .2s ease;}
+    .step.active{border-color:var(--accent); color:#fff; background:rgba(255,255,255,.10); transform: translateY(-1px);}
+    .num{width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.1); font-size:12px;}
+    .step.active .num{background: var(--accent); color:#052e16;}
+    .prog{ height:6px; background:rgba(255,255,255,.12); border-radius:999px; overflow:hidden; margin-bottom:12px; }
+    .prog > span{ display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--brand), var(--accent)); transition: width .35s ease; }
+
+    .card{ margin-top:6px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.1); border-radius:18px; padding:18px; }
+    .question{ font-size:clamp(18px, 2vw, 22px); margin:0 0 10px 0; }
+    .subtle{ color:var(--muted); font-size:14px; margin:0 0 14px 0;}
+
+    .options{ display:grid; gap:12px; grid-template-columns: 1fr; }
+    @media (min-width:700px){ .options{ grid-template-columns: repeat(3, 1fr); } }
+    .opt{
+      position:relative; padding:16px 14px; border-radius:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12); cursor:pointer;
+      transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+      min-height:92px; display:flex; align-items:flex-start; gap:10px; user-select:none;
+      transform-style: preserve-3d; perspective:800px; overflow:hidden;
+    }
+    .opt:hover{ transform: translateY(-2px) rotateX(1deg); border-color: rgba(255,255,255,.22); box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+    .opt:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+    .opt .check{ flex:0 0 22px; height:22px; border-radius:7px; border:1.5px solid rgba(255,255,255,.35); margin-top:2px; display:grid; place-items:center; transition:all .2s ease; background: rgba(255,255,255,.02); transform: translateZ(20px);}
+    .opt .label{ font-weight:700; line-height:1.25; transform: translateZ(20px);}
+    .opt.selected{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--ring), 0 8px 26px rgba(0,0,0,.35);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+    }
+    .opt.selected .check{ background: var(--accent); border-color: var(--accent); }
+
+    .switch{ display:flex; align-items:center; gap:10px; margin:8px 0 14px 0; font-size:14px; color:var(--muted); }
+    .toggle{ width:50px; height:28px; background:rgba(255,255,255,.12); border-radius:999px; position:relative; border:1px solid rgba(255,255,255,.18);
+      cursor:pointer; transition: background .15s ease; }
+    .toggle[data-on="true"]{ background: var(--glow); border-color: var(--accent); }
+    .knob{ position:absolute; top:50%; left:3px; transform: translateY(-50%); width:22px; height:22px; background:#fff; border-radius:999px;
+      transition:left .15s ease; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+    .toggle[data-on="true"] .knob{ left:25px; }
+    .actions{ display:flex; justify-content:space-between; gap:10px; margin-top:16px; }
+    .btn{ appearance:none; border:none; border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer;
+      background:linear-gradient(180deg, var(--brand-2), var(--brand)); color:#fff; box-shadow: 0 8px 18px rgba(0,0,0,.45); transition: transform .06s ease; }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0px) scale(.98); }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; box-shadow:none; }
+    .ghost{ background: transparent; color:var(--text); border:1px solid rgba(255,255,255,.24); }
+    .helper{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+    form{ display:grid; gap:14px; margin-top:8px; }
+    label{ font-weight:700; font-size:14px; }
+    input{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:var(--text); }
+    input:focus{ outline: none; box-shadow: 0 0 0 3px var(--ring); }
+    .row{ display:grid; gap:12px; grid-template-columns:1fr; }
+    @media(min-width:700px){ .row{ grid-template-columns:1fr 1fr; } }
+    .error-text{ color:#fecdd3; font-size:13px; display:none; }
+    .pill{ display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.25); color:#fff; font-size:12px; margin-right:6px;}
+
+    .review{ font-size:14px; color:var(--muted); }
+    .success{ margin-top:14px; padding:12px; border-radius:12px; border:1px solid var(--accent); background:rgba(255,255,255,.07); color:#fff; display:none;}
+
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; pointer-events:none; align-items:center; justify-content:center; z-index:50; }
+    .modal-backdrop.show{ display:flex; pointer-events:auto; }
+    .modal{ width:min(720px, 96%); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border:1px solid rgba(255,255,255,.18); border-radius:16px; padding:18px; box-shadow:0 20px 40px rgba(0,0,0,.5); }
+    .modal h3{ margin:6px 0 8px; }
+    .modal .body{ max-height:48vh; overflow:auto; color:var(--muted); font-size:14px; line-height:1.5; padding-right:8px;}
+    .modal .actions{ justify-content:flex-end; }
+    .modal .consent{ margin-top:8px; display:flex; align-items:center; gap:8px; }
+    .modal .consent input{ width:auto; }
+    .danger{ background: linear-gradient(180deg, #f97316, #ef4444); }
+
+    #confetti{ position:fixed; inset:0; pointer-events:none; display:none; z-index:60; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <main class="container" role="main" aria-labelledby="titolo">
+    <div class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">ND</div>
+        <div>
+          <h1 id="titolo">Ciao, benvenuto in NoDebiti.it – da qui riparte la tua vita senza debiti.</h1>
+          <p class="lead">Completa il percorso in 3 semplici step.</p>
+        </div>
+      </div>
+      <div class="theme" aria-label="Cambia tema colore">
+        <button class="chip" data-theme="violet">Violet</button>
+        <button class="chip" data-theme="teal">Teal</button>
+        <button class="chip active" data-theme="emerald">Emerald</button>
+      </div>
+    </div>
+
+    <div class="prog" aria-hidden="true"><span id="bar"></span></div>
+    <div class="steps">
+      <div class="step active" data-step="1"><span class="num">1</span><span>Tipi di debito</span></div>
+      <div class="step" data-step="2"><span class="num">2</span><span>Dati personali</span></div>
+      <div class="step" data-step="3"><span class="num">3</span><span>Riepilogo</span></div>
+    </div>
+
+    <!-- Step 1 -->
+    <section id="step1" class="card" aria-labelledby="q1">
+      <h2 id="q1" class="question">Per quale tipo di debito posso aiutarti?</h2>
+      <p class="subtle">(puoi scegliere in modalità singola o multipla)</p>
+
+      <div class="switch" aria-live="polite">
+        <span>Selezione multipla</span>
+        <button id="multiToggle" class="toggle" type="button" role="switch" aria-checked="false" data-on="false" aria-label="Attiva selezione multipla">
+          <span class="knob" aria-hidden="true"></span>
+        </button>
+        <span id="modeLabel" aria-live="polite">OFF</span>
+      </div>
+
+      <div class="options" role="group" aria-label="Tipi di debito">
+        <button class="opt" data-value="banche_finanziarie" type="button" aria-pressed="false">
+          <span class="check" aria-hidden="true">✓</span>
+          <span class="label">Debiti con banche e/o finanziaria</span>
+        </button>
+        <button class="opt" data-value="tributari" type="button" aria-pressed="false">
+          <span class="check" aria-hidden="true">✓</span>
+          <span class="label">Debiti tributari</span>
+        </button>
+        <button class="opt" data-value="erario" type="button" aria-pressed="false">
+          <span class="check" aria-hidden="true">✓</span>
+          <span class="label">Debiti con erario</span>
+        </button>
+      </div>
+
+      <div class="actions">
+        <span></span>
+        <button id="to2" class="btn" type="button" disabled>Avanti</button>
+      </div>
+      <div id="helper1" class="helper" aria-live="polite">Modalità: <b>selezione singola</b>.</div>
+    </section>
+
+    <!-- Step 2 -->
+    <section id="step2" class="card" hidden>
+      <h2 class="question">I tuoi dati</h2>
+      <p class="subtle">Ci servono per ricontattarti e aiutarti velocemente. Tipi selezionati: <span id="chips"></span></p>
+
+      <form id="form">
+        <div class="row">
+          <div>
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" required autocomplete="given-name" />
+            <div class="error-text" id="err-nome">Inserisci il nome.</div>
+          </div>
+          <div>
+            <label for="cognome">Cognome</label>
+            <input id="cognome" name="cognome" type="text" required autocomplete="family-name" />
+            <div class="error-text" id="err-cognome">Inserisci il cognome.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="telefono">Numero di cellulare</label>
+            <input id="telefono" name="telefono" type="tel" inputmode="tel" placeholder="+39 333 1234567" required />
+            <div class="error-text" id="err-telefono">Numero non valido (min 9 cifre).</div>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required autocomplete="email" />
+            <div class="error-text" id="err-email">Inserisci un'email valida.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="importo">Importo del debito (€)</label>
+            <input id="importo" name="importo" type="number" step="0.01" min="0" required />
+            <div class="error-text" id="err-importo">Importo deve essere maggiore di zero.</div>
+          </div>
+          <div>
+            <label for="creditore">Con chi (nome creditore)</label>
+            <input id="creditore" name="creditore" type="text" required placeholder="Es. Banca X / Agenzia Entrate-Riscossione / Società di recupero Y" />
+            <div class="error-text" id="err-creditore">Inserisci il nome del creditore.</div>
+          </div>
+        </div>
+      </form>
+
+      <div class="actions">
+        <button id="back1" class="btn ghost" type="button">Indietro</button>
+        <button id="to3" class="btn" type="button">Avanti</button>
+      </div>
+    </section>
+
+    <!-- Step 3 -->
+    <section id="step3" class="card" hidden>
+      <h2 class="question">Riepilogo</h2>
+      <div class="review" id="review"></div>
+      <div class="actions">
+        <button id="back2" class="btn ghost" type="button">Indietro</button>
+        <button id="submit" class="btn" type="button">Invia</button>
+      </div>
+      <div id="ok" class="success">✅ Dati confermati! Grazie, ti ricontatteremo a breve.</div>
+    </section>
+  </main>
+
+  <!-- Modal GDPR -->
+  <div id="gdprModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="gdprTitle">
+    <div class="modal">
+      <h3 id="gdprTitle">Informativa sul trattamento dei dati personali verso terzi</h3>
+      <div class="body">
+        <p>Ai sensi del Regolamento (UE) 2016/679 (GDPR), NoDebiti.it informa che i dati conferiti saranno trattati per finalità di presa in carico della tua richiesta e, ove necessario, comunicati a professionisti terzi abilitati (avvocati, OCC, consulenti) esclusivamente per lo svolgimento dell’incarico.</p>
+        <p>Base giuridica: esecuzione di misure precontrattuali su richiesta dell’interessato e legittimo interesse alla gestione della pratica. I dati saranno conservati per il tempo strettamente necessario alla gestione della richiesta e degli eventuali obblighi di legge.</p>
+        <p>Diritti: accesso, rettifica, cancellazione, limitazione, opposizione. Puoi contattarci all’indirizzo privacy@nodedebiti.it.</p>
+      </div>
+      <label class="consent">
+        <input id="consentChk" type="checkbox" />
+        <span>Ho letto l'informativa e <b>acconsento</b> alla comunicazione dei miei dati ai professionisti terzi per la gestione della pratica.</span>
+      </label>
+      <div class="actions" style="margin-top:12px;">
+        <button id="closeModal" class="btn ghost" type="button">Annulla</button>
+        <button id="confirmSend" class="btn danger" type="button" disabled>Conferma</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var themeChips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+    function setTheme(t){
+      document.documentElement.setAttribute('data-theme', t);
+      themeChips.forEach(function(c){ c.classList.toggle('active', c.getAttribute('data-theme')===t); })
+    }
+    themeChips.forEach(function(chip){
+      chip.addEventListener('click', function(){ setTheme(chip.getAttribute('data-theme')); });
+    });
+    var activeChip = document.querySelector('.chip.active');
+    if(activeChip) setTheme(activeChip.getAttribute('data-theme'));
+
+    var bar = document.getElementById('bar');
+    function setProgress(step){
+      var pct = step===1? 33 : step===2? 66 : 100;
+      bar.style.width = pct + '%';
+    }
+
+    var isMulti = false;
+    var selections = [];
+    function el(id){ return document.getElementById(id); }
+    var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+    var s1 = el('step1'), s2 = el('step2'), s3 = el('step3');
+    var helper1 = el('helper1');
+    var to2 = el('to2'), back1 = el('back1'), to3 = el('to3'), back2 = el('back2');
+    var submitBtn = el('submit'), ok = el('ok'), chips = el('chips'), review = el('review');
+    var map = {banche_finanziarie: 'Debiti con banche e/o finanziaria', tributari: 'Debiti tributari', erario: 'Debiti con erario'};
+
+    function setStep(n){
+      s1.hidden = (n !== 1);
+      s2.hidden = (n !== 2);
+      s3.hidden = (n !== 3);
+      steps.forEach(function(st){ st.classList.toggle('active', Number(st.getAttribute('data-step')) === n); });
+      setProgress(n);
+    }
+
+    var multi = el('multiToggle');
+    var modeLabel = el('modeLabel');
+    var opts = Array.prototype.slice.call(document.querySelectorAll('.opt'));
+
+    function updateS1(){
+      modeLabel.textContent = isMulti ? 'ON' : 'OFF';
+      helper1.innerHTML = 'Modalità: <b>selezione ' + (isMulti ? 'multipla' : 'singola') + '</b>.';
+      to2.disabled = selections.length === 0;
+    }
+    function applySelectionUI(){
+      opts.forEach(function(o){
+        var v = o.getAttribute('data-value');
+        var active = selections.indexOf(v) >= 0;
+        o.classList.toggle('selected', active);
+        o.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    function addRipple(e){
+      var rect = e.currentTarget.getBoundingClientRect();
+      var d = Math.max(rect.width, rect.height);
+      var ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = d+'px';
+      ripple.style.left = (e.clientX - rect.left - d/2)+'px';
+      ripple.style.top = (e.clientY - rect.top - d/2)+'px';
+      e.currentTarget.appendChild(ripple);
+      setTimeout(function(){ ripple.remove(); }, 600);
+    }
+
+    multi.addEventListener('click', function(e){
+      addRipple(e);
+      isMulti = (multi.getAttribute('data-on') !== 'true');
+      multi.setAttribute('data-on', String(isMulti));
+      multi.setAttribute('aria-checked', String(isMulti));
+      if(!isMulti && selections.length > 1){
+        selections = [selections[0]];
+        applySelectionUI();
+      }
+      updateS1();
+    });
+
+    opts.forEach(function(o){
+      o.addEventListener('click', function(e){
+        addRipple(e);
+        var v = o.getAttribute('data-value');
+        if(isMulti){
+          var idx = selections.indexOf(v);
+          if (idx >= 0) selections.splice(idx,1);
+          else selections.push(v);
+        } else {
+          selections = [v];
+        }
+        applySelectionUI();
+        updateS1();
+      });
+    });
+
+    to2.addEventListener('click', function(e){
+      addRipple(e);
+      chips.innerHTML = selections.map(function(s){ return '<span class="pill">'+(map[s]||s)+'</span>'; }).join(' ');
+      setStep(2);
+    });
+
+    function digits(n){ return (n||'').replace(/\D/g,''); }
+    function showErr(id, show){ var e = el(id); if(e){ e.style.display = show ? 'block':'none'; } }
+    ['nome','cognome','telefono','email','importo','creditore'].forEach(function(id){
+      var input = el(id);
+      input.addEventListener('blur', function(){
+        if(id==='telefono') showErr('err-telefono', digits(input.value).length < 9);
+        else if(id==='email') showErr('err-email', input.value.indexOf('@')<0);
+        else if(id==='importo') showErr('err-importo', !(Number(input.value)>0));
+        else showErr('err-'+id, !input.value.trim());
+      });
+    });
+
+    to3.addEventListener('click', function(e){
+      addRipple(e);
+      ok.style.display='none';
+      var nome = el('nome').value.trim();
+      var cognome = el('cognome').value.trim();
+      var telefono = el('telefono').value.trim();
+      var email = el('email').value.trim();
+      var importo = Number(el('importo').value);
+      var creditore = el('creditore').value.trim();
+
+      var valid = true;
+      showErr('err-nome', !nome); if(!nome) valid=false;
+      showErr('err-cognome', !cognome); if(!cognome) valid=false;
+      showErr('err-telefono', digits(telefono).length < 9); if(digits(telefono).length<9) valid=false;
+      showErr('err-email', !email || email.indexOf('@')<0); if(!email || !email.includes('@')) valid=false;
+      showErr('err-importo', !(importo>0)); if(!(importo>0)) valid=false;
+      showErr('err-creditore', !creditore); if(!creditore) valid=false;
+
+      if(!valid) return;
+
+      var list = '<ul>' +
+        '<li><b>Tipi di debito:</b> ' + selections.map(function(s){return map[s]||s;}).join(', ') + '</li>' +
+        '<li><b>Nome:</b> ' + nome + ' ' + cognome + '</li>' +
+        '<li><b>Cellulare:</b> ' + telefono + '</li>' +
+        '<li><b>Email:</b> ' + email + '</li>' +
+        '<li><b>Importo debito:</b> € ' + importo.toLocaleString('it-IT') + '</li>' +
+        '<li><b>Creditore:</b> ' + creditore + '</li>' +
+      '</ul>';
+      review.innerHTML = list;
+      setStep(3);
+    });
+
+    var modal = el('gdprModal');
+    var consentChk = el('consentChk');
+    var closeModalBtn = el('closeModal');
+    var confirmSendBtn = el('confirmSend');
+
+    function openModal(){ consentChk.checked=false; confirmSendBtn.disabled=true; modal.classList.add('show'); }
+    function closeModal(){ modal.classList.remove('show'); }
+    consentChk.addEventListener('change', function(){ confirmSendBtn.disabled = !consentChk.checked; });
+    closeModalBtn.addEventListener('click', closeModal);
+
+    submitBtn.addEventListener('click', function(e){ addRipple(e); openModal(); });
+
+    var confetti = document.getElementById('confetti');
+    var ctx = confetti.getContext('2d');
+    var pieces = []; var anim;
+    function resizeCanvas(){ confetti.width = window.innerWidth; confetti.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    function launchConfetti(){
+      confetti.style.display='block';
+      pieces = [];
+      for(var i=0;i<120;i++){
+        pieces.push({
+          x: Math.random()*confetti.width,
+          y: -10 - Math.random()*confetti.height*0.7,
+          r: 4+Math.random()*6,
+          c: ['#fde68a','#fca5a5','#93c5fd','#86efac','#f5d0fe'][Math.floor(Math.random()*5)],
+          v: 1+Math.random()*3,
+          a: Math.random()*2*Math.PI
+        });
+      }
+      cancelAnimationFrame(anim);
+      tick();
+      setTimeout(function(){ confetti.style.display='none'; cancelAnimationFrame(anim); }, 1800);
+    }
+    function tick(){
+      ctx.clearRect(0,0,confetti.width, confetti.height);
+      pieces.forEach(function(p){
+        p.y += p.v; p.x += Math.sin(p.a);
+        ctx.fillStyle = p.c; ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      });
+      anim = requestAnimationFrame(tick);
+    }
+
+    confirmSendBtn.addEventListener('click', function(){
+      closeModal();
+      ok.style.display='block';
+      launchConfetti();
+    });
+
+    back1.addEventListener('click', function(e){ addRipple(e); setStep(1); });
+    back2.addEventListener('click', function(e){ addRipple(e); setStep(2); });
+
+    setStep(1);
+    updateS1();
+  })();
+  </script>
+</body>
+</html>
