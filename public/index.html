@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoDebiti.it</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <section id="step-1" class="step active">
+      <h1>Ciao, benvenuto in NoDebiti.it</h1>
+      <p class="subtitle">Da qui riparte la tua vita senza debiti.</p>
+      <h2>Come possiamo aiutarti?</h2>
+      <form id="form-step-1">
+        <div class="choices">
+          <label class="choice">
+            <input type="checkbox" name="topics" value="Debiti Finanziari" />
+            <span>Debiti Finanziari</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="topics" value="Debiti Tributari" />
+            <span>Debiti Tributari</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="topics" value="Debiti con l'Erario" />
+            <span>Debiti con l'Erario</span>
+          </label>
+        </div>
+        <div class="actions">
+          <button type="button" id="to-step-2" class="primary">Avanti</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="step-2" class="step">
+      <h2>I tuoi dati</h2>
+      <form id="form-step-2">
+        <div class="grid">
+          <label>
+            Nome
+            <input type="text" name="firstName" required />
+          </label>
+          <label>
+            Cognome
+            <input type="text" name="lastName" required />
+          </label>
+          <label>
+            Cellulare
+            <input type="tel" name="phone" inputmode="tel" />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" required />
+          </label>
+        </div>
+        <div class="actions">
+          <button type="button" id="back-to-1" class="secondary">Indietro</button>
+          <button type="button" id="to-step-3" class="primary">Avanti</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="step-3" class="step">
+      <h2>Riepilogo</h2>
+      <div class="summary" id="summary"></div>
+      <div class="actions">
+        <button type="button" id="back-to-2" class="secondary">Indietro</button>
+        <button type="button" id="submit" class="primary">Invia</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="gdpr-modal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="gdpr-title">
+    <div class="modal-content">
+      <h3 id="gdpr-title">Informativa sul trattamento dei dati (GDPR)</h3>
+      <div class="modal-body">
+        <p>
+          Ai sensi del Reg. UE 2016/679 (GDPR), acconsento al trattamento dei miei dati personali
+          per finalità di contatto e cessione a terzi partner di NoDebiti.it per la gestione della mia richiesta.
+        </p>
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="consent-checkbox" />
+        <span>Acconsento</span>
+      </label>
+      <div class="modal-actions">
+        <button id="consent-cancel" class="secondary">Annulla</button>
+        <button id="consent-confirm" class="primary" disabled>Conferma e invia</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
