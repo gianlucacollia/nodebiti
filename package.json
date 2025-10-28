@@ -1,0 +1,31 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "the first international platform that allows you to return to living debt-free",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gianlucacollia/nodebiti.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gianlucacollia/nodebiti/issues"
+  },
+  "homepage": "https://github.com/gianlucacollia/nodebiti#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
