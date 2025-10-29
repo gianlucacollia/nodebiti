@@ -1,0 +1,92 @@
+════════════════════════════════════════════════════════════
+   COME PUBBLICARE NODEBITI.IT ONLINE - 3 METODI FACILI
+════════════════════════════════════════════════════════════
+
+📁 File da caricare: index-standalone.html (oppure tutti e 3: index.html, styles.css, app.js)
+
+
+═══════════════════════════════════════════════════════════
+🚀 METODO 1: NETLIFY DROP (IL PIÙ SEMPLICE) - CONSIGLIATO!
+═══════════════════════════════════════════════════════════
+
+1. Vai su: https://app.netlify.com/drop
+
+2. Trascina il file "index-standalone.html" nella finestra del browser
+   (oppure trascina tutta la cartella se vuoi usare i 3 file separati)
+
+3. FATTO! Riceverai subito un link tipo:
+   https://tuo-sito-random.netlify.app
+
+4. Il sito rimarrà online GRATIS per sempre!
+
+✅ PRO: Velocissimo, nessuna registrazione necessaria, HTTPS automatico
+❌ CONTRO: Nome dominio casuale (ma puoi personalizzarlo registrandoti)
+
+
+═══════════════════════════════════════════════════════════
+🌐 METODO 2: TIINY.HOST (ULTRA VELOCE)
+═══════════════════════════════════════════════════════════
+
+1. Vai su: https://tiiny.host
+
+2. Clicca "Upload your site"
+
+3. Seleziona il file "index-standalone.html"
+
+4. Clicca "Upload" e ricevi il tuo link:
+   https://tuo-sito.tiiny.site
+
+✅ PRO: Semplicissimo, nessuna registrazione
+❌ CONTRO: Gratis solo per 7 giorni (poi devi ri-caricare o pagare)
+
+
+═══════════════════════════════════════════════════════════
+📝 METODO 3: GITHUB PAGES (SE HAI ACCOUNT GITHUB)
+═══════════════════════════════════════════════════════════
+
+1. Vai su GitHub.com e fai login
+
+2. Crea un nuovo repository pubblico (es. "nodebiti")
+
+3. Carica i 3 file: index.html, styles.css, app.js
+   (oppure rinomina index-standalone.html in index.html)
+
+4. Vai su Settings > Pages
+
+5. Seleziona "main branch" e salva
+
+6. Il tuo sito sarà su:
+   https://tuo-username.github.io/nodebiti
+
+✅ PRO: Gratis per sempre, dominio professionale, versioning
+❌ CONTRO: Richiede account GitHub
+
+
+═══════════════════════════════════════════════════════════
+🎯 RACCOMANDAZIONE
+═══════════════════════════════════════════════════════════
+
+Per una demo veloce da mandare all'amico: USA NETLIFY DROP (Metodo 1)
+Per un sito permanente e professionale: USA GITHUB PAGES (Metodo 3)
+
+
+═══════════════════════════════════════════════════════════
+💡 BONUS: ALTRI SERVIZI GRATUITI
+═══════════════════════════════════════════════════════════
+
+• Vercel (https://vercel.com) - Simile a Netlify
+• Render (https://render.com) - Ottimo per progetti più complessi
+• Cloudflare Pages (https://pages.cloudflare.com) - Super veloce
+• Firebase Hosting (https://firebase.google.com) - Di Google
+
+
+═══════════════════════════════════════════════════════════
+📧 DOPO LA PUBBLICAZIONE
+═══════════════════════════════════════════════════════════
+
+Copia il link che ricevi e mandalo al tuo amico!
+Il sito funziona su qualsiasi dispositivo: PC, tablet, smartphone.
+
+
+Hai bisogno di aiuto? Dimmi quale metodo vuoi usare! 😊
+
